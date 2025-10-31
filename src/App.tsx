@@ -25,6 +25,8 @@ const App = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [results, setResults] = useState<DrugAnalysis[] | null>(null);
+  const API_BASE = (__API_BASE_URL__ ?? "http://localhost:8080").replace(/\/$/, "");
+  const apiUrl = (p: string) => new URL(p, API_BASE).toString();
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -37,10 +39,10 @@ const App = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch(`${__API_BASE_URL__}/analyze`, {
+      const response = await fetch(apiUrl("/analyze"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ drugs })
+        body: JSON.stringify({ drugs }),
       });
 
       if (!response.ok) {
